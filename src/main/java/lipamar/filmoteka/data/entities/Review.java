@@ -11,7 +11,7 @@ public class Review {
     @Column
     private String content;
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private Reviewer author;
+    private User author;
 
     public Review() {
     }

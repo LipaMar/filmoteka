@@ -11,6 +11,8 @@ public class MovieDetailsDto {
     private String director;
     @JsonProperty("Year")
     private String productionYear;
+    @JsonProperty("Plot")
+    private String plot;
     @JsonProperty("Poster")
     private String posterUrl;
     @JsonProperty("Country")
@@ -34,6 +36,15 @@ public class MovieDetailsDto {
 
     public void setDirector(String director) {
         this.director = director;
+    }
+
+    public String getPlot() {
+        return plot;
+    }
+
+    public void setPlot(String plot) {
+
+        this.plot = plot;
     }
 
     public String getProductionYear() {

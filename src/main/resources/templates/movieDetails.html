@@ -6,6 +6,20 @@
     <title th:text="${movie.getTitle()}"></title>
 </head>
 <body>
-
+    <div th:object="${movie}">
+        <div class="poster" >
+            <img alt="Poster could not load" th:src="*{posterUrl}">
+        </div>
+        <span>
+            <span th:text="*{title}"></span>
+            <span th:text="'('+*{productionYear}+')'"></span>
+        </span>
+        <div>
+            <p th:text="*{plot}"></p>
+        </div>
+        <div>
+            <span th:text="*{imdbRating}"></span>
+        </div>
+    </div>
 </body>
 </html>
