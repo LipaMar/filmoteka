@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Filoteka</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function search() {
+            var redirect = /*[[@{/find/}]]*/'';
+            var movie = document.getElementById("searchBar").value;
+            window.location.replace(redirect+movie);
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+<header>
+    <h1>Witaj w serwisie Filmoteka</h1>
+</header>
+<nav>
+    <div class="searchArea">
+        <input type="text" id="searchBar" placeholder="Szukaj">
+        <div class="searchbtn" onclick="search()"><i class="fas fa-search"></i></div>
+    </div>
+</nav>
+</body>
+</html>

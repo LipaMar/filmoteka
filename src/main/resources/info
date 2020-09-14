@@ -1,0 +1,29 @@
+1.	Należy zaprojektować REST API dla witryny o tematyce filmowej. Obsługiwane funkcjonalności:
+a.	Wyświetlanie listy wszystkich filmów
+b.	Dodanie filmu do bazy
+c.	Wyświetlenie szczegółów filmu
+d.	Aktualizacja danych o filmie
+e.	Wyświetlenie listy recenzji danego filmu
+f.	Dodanie recenzji danego filmu
+g.	Usunięcie recenzji danego filmu
+h.	Dodanie oceny filmu (1-5)
+i.	Polubienie filmu
+j.	Polubienie recenzji
+
+
+http://www.omdbapi.com/?apikey=971ba594&t=The+Godfather
+
+https://api.nytimes.com/svc/movies/v2/critics/{reviewer}.json
+https://api.nytimes.com/svc/movies/v2/reviews/search.json?query=godfather&api-key=yourkey
+
+1. pobieranie danych z api nyt:
+-lista recenzentów
+-recenzje
+2. pobieranie danych z api omdbapi:
+-wyszukiwanie
+-wyświetlanie listy
+-szczegóły filmu
+
+w bazie:
+-użytkownicy
+
