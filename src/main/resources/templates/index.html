@@ -12,19 +12,31 @@
         function search() {
             var redirect = /*[[@{/find/}]]*/'';
             var movie = document.getElementById("searchBar").value;
-            window.location.replace(redirect+movie);
+            window.location.replace(redirect + movie);
         }
+
         /*]]>*/
     </script>
 </head>
 <body>
 <header>
-    <h1>Witaj w serwisie Filmoteka</h1>
+    <h1>Witaj <span sec:authorize="isAuthenticated()" sec:authentication="name"></span> w serwisie Filmoteka</h1>
 </header>
 <nav>
     <div class="searchArea">
         <input type="text" id="searchBar" placeholder="Szukaj">
         <div class="searchbtn" onclick="search()"><i class="fas fa-search"></i></div>
+    </div>
+    <div>
+        <div sec:authorize="isAuthenticated()">
+            <a th:href="@{/logout}">
+                Wyloguj się
+            </a>
+        </div>
+        <div sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}">Zaloguj się</a>
+            <span>Nie masz jeszcze konta? <a th:href="@{/register}">Zarejestruj się!</a></span>
+        </div>
     </div>
 </nav>
 </body>
