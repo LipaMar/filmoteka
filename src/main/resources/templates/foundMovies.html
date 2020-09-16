@@ -10,7 +10,7 @@
 <ul th:each="movie : ${results}">
     <li>
         <div>
-            <img th:src="*{movie.getPoster()}"/>
+            <img th:src="*{movie.getPoster()}" width="150" height="222"/>
             <a th:text="*{movie.getTitle()}" th:href="@{/movie(id=*{movie.getImdbID()})}"></a>
             <span th:text="*{movie.getYear()}"></span>
         </div>

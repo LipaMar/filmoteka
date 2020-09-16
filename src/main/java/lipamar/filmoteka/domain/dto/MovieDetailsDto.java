@@ -18,7 +18,7 @@ public class MovieDetailsDto {
     @JsonProperty("Country")
     private String country;
     @JsonProperty("imdbRating")
-    private Float imdbRating;
+    private String imdbRating;
     @JsonProperty("Runtime")
     private String runtimeMin;
 
@@ -56,7 +56,7 @@ public class MovieDetailsDto {
     }
 
     public String getPosterUrl() {
-        return posterUrl;
+        return posterUrl.equals("N/A")?"https://datahabitat.mx/wp-content/themes/wp-pro-real-estate-7-child/images/no-image.png":posterUrl;
     }
 
     public void setPosterUrl(String posterUrl) {
@@ -71,11 +71,11 @@ public class MovieDetailsDto {
         this.country = country;
     }
 
-    public Float getImdbRating() {
-        return imdbRating;
+    public String getImdbRating() {
+        return imdbRating.equals("N/A")?"-":imdbRating;
     }
 
-    public void setImdbRating(Float imdbRating) {
+    public void setImdbRating(String imdbRating) {
         this.imdbRating = imdbRating;
     }
 

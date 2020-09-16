@@ -8,7 +8,7 @@
 <body>
     <div th:object="${movie}">
         <div class="poster" >
-            <img alt="Poster could not load" th:src="*{posterUrl}">
+            <img alt="poster could not load" th:src="*{posterUrl}" width="300" height="444">
         </div>
         <span>
             <span th:text="*{title}"></span>

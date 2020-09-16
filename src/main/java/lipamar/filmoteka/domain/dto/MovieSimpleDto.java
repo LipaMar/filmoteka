@@ -48,7 +48,7 @@ public class MovieSimpleDto {
     }
 
     public String getPoster() {
-        return poster;
+        return poster.equals("N/A")?"https://datahabitat.mx/wp-content/themes/wp-pro-real-estate-7-child/images/no-image.png":poster;
     }
 
     public void setPoster(String poster) {
