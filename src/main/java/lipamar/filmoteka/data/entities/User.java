@@ -1,6 +1,8 @@
 package lipamar.filmoteka.data.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Users")
@@ -12,6 +14,8 @@ public class User {
     private String username;
     @Column
     private String password;
+    @ManyToMany(mappedBy = "userLiked")
+    private Set<Review> likedReviews = new HashSet<>();
 
     public User() {
     }
