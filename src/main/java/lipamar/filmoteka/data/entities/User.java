@@ -8,14 +8,14 @@ import java.util.Set;
 @Table(name = "Users")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
     private String username;
     @Column
     private String password;
     @ManyToMany(mappedBy = "userLiked")
-    private Set<Review> likedReviews = new HashSet<>();
+    private final Set<Review> likedReviews = new HashSet<>();
 
     public User() {
     }
