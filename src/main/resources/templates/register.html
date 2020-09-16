@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Rejestracja</title>
+</head>
+<body>
+<!--/*@thymesVar id="user" type="lipamar.filmoteka.data.entities.User"*/-->
+<form method="POST" th:action="@{/register}" th:object="${user}">
+    <label>
+        Nazwa użytkownika:
+        <input type="text" th:field="*{username}"/>
+    </label>
+    <label>
+        Hasło:
+        <input type="password" th:field="*{password}"/>
+    </label>
+    <input type="submit" value="Gotowe!">
+</form>
+</body>
+</html>
