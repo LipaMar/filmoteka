@@ -9,6 +9,15 @@
 <body>
 <!--/*@thymesVar id="user" type="lipamar.filmoteka.data.entities.User"*/-->
 <form method="POST" th:action="@{/register}" th:object="${user}">
+
+    <div class="errors" th:if="${#fields.hasErrors('*')}">
+        Wprowadzono niepoprawne dane:
+        <ul>
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">
+            </li>
+        </ul>
+    </div>
+
     <label>
         Nazwa użytkownika:
         <input type="text" th:field="*{username}"/>
