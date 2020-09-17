@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class MovieDetailsDto {
-
+    @JsonProperty("imdbID")
+    private String id;
     @JsonProperty("Title")
     private String title;
     @JsonProperty("Director")
@@ -21,6 +22,14 @@ public class MovieDetailsDto {
     private String imdbRating;
     @JsonProperty("Runtime")
     private String runtimeMin;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -39,7 +48,7 @@ public class MovieDetailsDto {
     }
 
     public String getPlot() {
-        return plot;
+        return plot.equals("N/A")?"Brak opisu":plot;
     }
 
     public void setPlot(String plot) {
