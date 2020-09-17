@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pl"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Wyszukiwanie</title>
@@ -11,7 +10,7 @@
     <li>
         <div>
             <img th:src="*{movie.getPoster()}" width="150" height="222"/>
-            <a th:text="*{movie.getTitle()}" th:href="@{/movie(id=*{movie.getImdbID()})}"></a>
+            <a th:text="*{movie.getTitle()}" th:href="@{'/movie/'+ ${movie.getImdbID()}}"></a>
             <span th:text="*{movie.getYear()}"></span>
         </div>
     </li>

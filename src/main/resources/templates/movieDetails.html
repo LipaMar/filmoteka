@@ -1,25 +1,34 @@
 <!DOCTYPE html>
 <html lang="pl"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title th:text="${movie.getTitle()}"></title>
 </head>
 <body>
-    <div th:object="${movie}">
-        <div class="poster" >
-            <img alt="poster could not load" th:src="*{posterUrl}" width="300" height="444">
-        </div>
-        <span>
+<div th:object="${movie}">
+    <div class="poster">
+        <img alt="poster could not load" th:src="*{posterUrl}" width="300" height="444">
+    </div>
+    <span>
             <span th:text="*{title}"></span>
             <span th:text="'('+*{productionYear}+')'"></span>
         </span>
-        <div>
-            <p th:text="*{plot}"></p>
-        </div>
-        <div>
-            <span th:text="*{imdbRating}"></span>
-        </div>
+    <div>
+        <p th:text="*{plot}"></p>
     </div>
+    <div>
+        <span th:text="*{imdbRating}"></span>
+    </div>
+</div>
+<!--/*@thymesVar id="review" type="lipamar.filmoteka.data.entities.Review"*/-->
+<form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getId()}}" th:object="${review}">
+    <textarea th:field="${review.content}"></textarea>
+
+    <input type="submit">
+</form>
+<dev sec:authorize="!isAuthenticated()"><p><a th:href="@{/register}">Zarejestruj</a> lub <a
+        th:href="@{/login}">zaloguj</a> się, aby móc dodawać własne recenzje!</p></dev>
 </body>
 </html>

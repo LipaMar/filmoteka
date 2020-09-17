@@ -3,14 +3,13 @@ package lipamar.filmoteka.data.entities;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "Reviews")
 public class Review {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
     private String content;
@@ -22,13 +21,13 @@ public class Review {
     private Date date;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "User_Review",
-            joinColumns = { @JoinColumn(name = "Reviews.id") },
-            inverseJoinColumns = { @JoinColumn(name = "Users.id") }
+            joinColumns = {@JoinColumn(name = "Reviews.id")},
+            inverseJoinColumns = {@JoinColumn(name = "Users.id")}
     )
     private Set<User> userLiked = new HashSet<>();
+
     public Review() {
     }
-
 
 
     public Long getId() {
