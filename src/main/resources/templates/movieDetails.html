@@ -19,16 +19,37 @@
         <p th:text="*{plot}"></p>
     </div>
     <div>
-        <span th:text="*{imdbRating}"></span>
+        <label>
+            IMDB rating:
+            <span th:text="*{imdbRating}"></span>
+        </label>
+        <label>
+            Filmoteka rating:
+            <span th:text="${#numbers.formatDecimal(avg,1,2)}"></span>
+        </label>
     </div>
 </div>
 <!--/*@thymesVar id="review" type="lipamar.filmoteka.data.entities.Review"*/-->
 <form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getId()}}" th:object="${review}">
-    <textarea th:field="${review.content}"></textarea>
+    <div>
+        <label>Ocena:</label>
+        <input type="number" min="1" max="10" th:field="*{rate}">
+    </div>
+    <textarea th:field="*{content}"></textarea>
 
     <input type="submit">
 </form>
-<dev sec:authorize="!isAuthenticated()"><p><a th:href="@{/register}">Zarejestruj</a> lub <a
-        th:href="@{/login}">zaloguj</a> się, aby móc dodawać własne recenzje!</p></dev>
+<div sec:authorize="!isAuthenticated()">
+    <p><a th:href="@{/register}">Zarejestruj</a> lub <a th:href="@{/login}">zaloguj</a> się, aby móc dodawać własne recenzje!</p>
+</div>
+<div>
+    <ul th:each="comment:${reviews}">
+        <li>
+            <span th:text="'Ocena: '+*{comment.rate}"></span><br>
+            <span th:text="'Data: '+*{#dates.format(comment.date,'dd/MM/yyyy')}"></span><br>
+            <span th:text="*{comment.content}"></span><br>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

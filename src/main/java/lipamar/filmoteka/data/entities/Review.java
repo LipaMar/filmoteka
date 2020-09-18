@@ -1,6 +1,9 @@
 package lipamar.filmoteka.data.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +16,11 @@ public class Review {
     private Long id;
     @Column
     private String content;
+    @Column
+    @Min(1)
+    @Max(10)
+    @NotNull(message = "You must rate the film")
+    private Integer rate;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User author;
     @Column
@@ -29,9 +37,24 @@ public class Review {
     public Review() {
     }
 
-
     public Long getId() {
         return id;
+    }
+
+    public Integer getRate() {
+        return rate;
+    }
+
+    public void setRate(Integer rate) {
+        this.rate = rate;
+    }
+
+    public Set<User> getUserLiked() {
+        return userLiked;
+    }
+
+    public void setUserLiked(Set<User> userLiked) {
+        this.userLiked = userLiked;
     }
 
     public String getContent() {
