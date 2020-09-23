@@ -10,11 +10,10 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         function search() {
-            var redirect = /*[[@{/find/}]]*/'';
-            var movie = document.getElementById("searchBar").value;
+            const redirect = /*[[@{/find/}]]*/'http://localhost:8080/find/';
+            let movie = document.getElementById("searchBar").value;
             window.location.replace(redirect + movie);
         }
-
         /*]]>*/
     </script>
 </head>
@@ -25,7 +24,7 @@
 <nav>
     <div class="searchArea">
         <input type="text" id="searchBar" placeholder="Szukaj">
-        <div class="searchbtn" onclick="search()"><i class="fas fa-search"></i></div>
+        <div id="searchbtn" onclick="search()"><i class="fas fa-search"></i></div>
     </div>
     <div>
         <div sec:authorize="isAuthenticated()">
@@ -39,5 +38,14 @@
         </div>
     </div>
 </nav>
+<script>
+    let searchBar = document.getElementById("searchBar");
+    searchBar.addEventListener("keyup", function (event) {
+        if(event.code ==='Enter'){
+            event.preventDefault();
+            document.getElementById("searchbtn").click();
+        }
+    });
+</script>
 </body>
 </html>

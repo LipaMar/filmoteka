@@ -27,7 +27,7 @@
     font-weight: bold;
 }
 
-.searchbtn {
+#searchbtn {
     background: #ffec00;
     width: 10%;
     border-radius: 5px;
@@ -35,7 +35,7 @@
     cursor: pointer;
 }
 
-.searchbtn .fas{
+#searchbtn .fas{
     position: absolute;
     top: 50%;
     left: 50%;
