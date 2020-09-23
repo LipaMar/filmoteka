@@ -1,16 +1,16 @@
 package lipamar.filmoteka.domain.movie;
 
 import lipamar.filmoteka.domain.review.Review;
-import lipamar.filmoteka.domain.user.User;
 import lipamar.filmoteka.domain.movie.dto.MovieDetailsDto;
 import lipamar.filmoteka.domain.exception.OperationForbidden;
 import lipamar.filmoteka.domain.review.ReviewRepository;
+import lipamar.filmoteka.domain.user.User;
 import lipamar.filmoteka.domain.user.UserRepository;
 import lipamar.filmoteka.domain.utils.OmdbApiUriBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -21,61 +21,83 @@ import java.util.Date;
 import java.util.Set;
 
 @Controller
-@RequestMapping("/movie")
+@RequestMapping("/movie/{movieId}")
 public class MovieInfoController {
-    private final ReviewRepository reviewRepository;
-    private final UserRepository userRepository;
+    private final ReviewRepository reviews;
+    private final UserRepository users;
+    private final static String MOVIE_DETAILS_VIEW = "movieDetails";
 
-    public MovieInfoController(ReviewRepository reviewRepository, UserRepository userRepository) {
-        this.reviewRepository = reviewRepository;
-        this.userRepository = userRepository;
-    }
-    @InitBinder
-    public void setAllowedFields(WebDataBinder dataBinder) {
-        dataBinder.setDisallowedFields("id");
+    @Autowired
+    public MovieInfoController(ReviewRepository reviews, UserRepository users) {
+        this.reviews = reviews;
+        this.users = users;
     }
 
-    @GetMapping(value = "/{id}")
-    public String movie(@PathVariable String id, Model model) {
-        MovieDetailsDto movieDetails = getMovieDetailsDto(id);
-        Set<Review> reviewSet = reviewRepository.findAllByMovieID(id);
-        model.addAttribute("movie", movieDetails);
-        model.addAttribute("review", new Review());
-        model.addAttribute("reviews", reviewSet);
-        model.addAttribute("avg", getAvgRating(id, reviewSet));
-        return "movieDetails";
+    @ModelAttribute("movie")
+    public MovieDetailsDto getMovie(@PathVariable String movieId) {
+        return getMovieDetailsFromApi(movieId);
     }
 
-    private double getAvgRating(String id, Set<Review> reviewSet) {
-        return reviewSet.stream().mapToInt(Review::getRate).average().orElse(0);
-    }
-
-    private MovieDetailsDto getMovieDetailsDto(String id) {
+    private MovieDetailsDto getMovieDetailsFromApi(String id) {
         OmdbApiUriBuilder builder = new OmdbApiUriBuilder();
         builder.id(id);
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(builder.build(), MovieDetailsDto.class);
     }
 
-    @PostMapping(value = "/{id}")
-    public String postReview(@PathVariable String id, @Valid Review review, Errors errors) {
+    @ModelAttribute("reviews")
+    public Set<Review> getReviews(@PathVariable String movieId) {
+        return reviews.findAllByMovieID(movieId);
+    }
+
+    @ModelAttribute("review")
+    public Review getReview(@PathVariable String movieId) {
+        User user = getLoggedUser();
+
+        Review review = reviews.findByAuthorAndMovieID(user , movieId);
+        return review == null ? new Review() : review;
+    }
+
+    @ModelAttribute("avgRating")
+    public double getAvgRating(@PathVariable String movieId) {
+        return calculateRating(getReviews(movieId));
+    }
+
+    private double calculateRating(Set<Review> reviewSet) {
+        return reviewSet.stream().mapToInt(Review::getRate).average().orElse(0);
+    }
+
+    @InitBinder
+    public void setDisallowedFields(WebDataBinder dataBinder) {
+        dataBinder.setDisallowedFields("id");
+    }
+
+    @GetMapping
+    public String movieDetailsPage() {
+        return MOVIE_DETAILS_VIEW;
+    }
+
+    @PostMapping
+    public String postReview(@PathVariable String movieId, @Valid Review review, Errors errors) {
         if (!errors.hasErrors()) {
-            saveReview(id, review);
+            saveReview(movieId, review);
         }
-        return "redirect:/movie/" + id;
+        return "redirect:/movie/" + movieId;
     }
 
     private void saveReview(String id, Review review) {
-        review.setAuthor(getLoggedUser());
+        User user = getLoggedUser();
+        if (user==null) throw new OperationForbidden();
+        review.setAuthor(user);
         review.setMovieID(id);
         review.setDate(new Date());
-        reviewRepository.save(review);
+        reviews.save(review);
     }
 
     private User getLoggedUser() throws OperationForbidden {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        return userRepository.findByUsername(currentPrincipalName).stream().findFirst().orElseThrow(() -> new OperationForbidden("Anonymous users cannot add reviews"));
+        return users.findByUsername(currentPrincipalName).stream().findFirst().orElse(null);
     }
 
 }
