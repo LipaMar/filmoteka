@@ -87,7 +87,7 @@ public class MovieInfoController {
 
     private void saveReview(String id, Review review) {
         User user = getLoggedUser();
-        if (user==null) throw new OperationForbidden();
+        if (user == null) throw new OperationForbidden();
         review.setAuthor(user);
         review.setMovieID(id);
         review.setDate(new Date());
@@ -97,7 +97,7 @@ public class MovieInfoController {
     private User getLoggedUser() throws OperationForbidden {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        return users.findByUsername(currentPrincipalName).stream().findFirst().orElse(null);
+        return users.findByUsername(currentPrincipalName);
     }
 
 }

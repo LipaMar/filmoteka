@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        User user = userRepository.findByUsername(s).stream().findFirst().orElse(null);
+        User user = userRepository.findByUsername(s);
         if (user == null) {
             throw new UsernameNotFoundException("USER NOT FOUND");
         }
