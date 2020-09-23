@@ -1,4 +1,4 @@
-package lipamar.filmoteka.domain.handler;
+package lipamar.filmoteka.domain.system;
 
 import lipamar.filmoteka.domain.exception.OperationForbidden;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,10 +1,9 @@
-package lipamar.filmoteka.data.entities;
+package lipamar.filmoteka.domain.user;
 
-import org.springframework.validation.annotation.Validated;
+import lipamar.filmoteka.domain.model.BaseEntity;
+import lipamar.filmoteka.domain.review.Review;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -12,10 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
     @Column
     @Pattern(regexp = "[a-zA-z0-9]{4,15}",message = "Username must be 4 to 15 characters long and must only contain letters and numbers")
     private String username;
@@ -27,11 +23,6 @@ public class User {
 
     public User() {
     }
-
-    public Long getId() {
-        return id;
-    }
-
 
     public String getUsername() {
         return username;

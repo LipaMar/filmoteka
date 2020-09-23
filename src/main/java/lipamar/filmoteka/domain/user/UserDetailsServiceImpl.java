@@ -1,7 +1,5 @@
-package lipamar.filmoteka.domain.service;
+package lipamar.filmoteka.domain.user;
 
-import lipamar.filmoteka.data.entities.User;
-import lipamar.filmoteka.domain.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

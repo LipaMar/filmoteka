@@ -1,43 +1,19 @@
-package lipamar.filmoteka.domain.dto;
+package lipamar.filmoteka.domain.movie.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-public class MovieDetailsDto {
-    @JsonProperty("imdbID")
-    private String id;
-    @JsonProperty("Title")
-    private String title;
+public class MovieDetailsDto extends MovieSimpleDto {
     @JsonProperty("Director")
     private String director;
-    @JsonProperty("Year")
-    private String productionYear;
     @JsonProperty("Plot")
     private String plot;
-    @JsonProperty("Poster")
-    private String posterUrl;
     @JsonProperty("Country")
     private String country;
     @JsonProperty("imdbRating")
     private String imdbRating;
     @JsonProperty("Runtime")
     private String runtimeMin;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getDirector() {
         return director;
@@ -54,22 +30,6 @@ public class MovieDetailsDto {
     public void setPlot(String plot) {
 
         this.plot = plot;
-    }
-
-    public String getProductionYear() {
-        return productionYear;
-    }
-
-    public void setProductionYear(String productionYear) {
-        this.productionYear = productionYear;
-    }
-
-    public String getPosterUrl() {
-        return posterUrl.equals("N/A")?"https://datahabitat.mx/wp-content/themes/wp-pro-real-estate-7-child/images/no-image.png":posterUrl;
-    }
-
-    public void setPosterUrl(String posterUrl) {
-        this.posterUrl = posterUrl;
     }
 
     public String getCountry() {

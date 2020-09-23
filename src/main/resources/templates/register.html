@@ -7,7 +7,7 @@
     <title>Rejestracja</title>
 </head>
 <body>
-<!--/*@thymesVar id="user" type="lipamar.filmoteka.data.entities.User"*/-->
+<!--/*@thymesVar id="user" type="lipamar.filmoteka.domain.user.User"*/-->
 <form method="POST" th:action="@{/register}" th:object="${user}">
 
     <div class="errors" th:if="${#fields.hasErrors('*')}">

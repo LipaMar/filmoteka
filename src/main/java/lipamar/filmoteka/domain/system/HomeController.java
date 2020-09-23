@@ -1,4 +1,4 @@
-package lipamar.filmoteka.domain.controller;
+package lipamar.filmoteka.domain.system;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

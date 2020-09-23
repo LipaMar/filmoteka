@@ -1,4 +1,7 @@
-package lipamar.filmoteka.data.entities;
+package lipamar.filmoteka.domain.review;
+
+import lipamar.filmoteka.domain.model.BaseEntity;
+import lipamar.filmoteka.domain.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -10,10 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Reviews")
-public class Review {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Review extends BaseEntity {
     @Column
     private String content;
     @Column
@@ -35,10 +35,6 @@ public class Review {
     private Set<User> userLiked = new HashSet<>();
 
     public Review() {
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public Integer getRate() {

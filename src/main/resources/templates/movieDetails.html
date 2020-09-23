@@ -9,11 +9,11 @@
 <body>
 <div th:object="${movie}">
     <div class="poster">
-        <img alt="poster could not load" th:src="*{posterUrl}" width="300" height="444">
+        <img alt="poster could not load" th:src="*{getPoster()}" width="300" height="444">
     </div>
     <span>
             <span th:text="*{title}"></span>
-            <span th:text="'('+*{productionYear}+')'"></span>
+            <span th:text="'('+*{getYear()}+')'"></span>
         </span>
     <div>
         <p th:text="*{plot}"></p>
@@ -29,8 +29,8 @@
         </label>
     </div>
 </div>
-<!--/*@thymesVar id="review" type="lipamar.filmoteka.data.entities.Review"*/-->
-<form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getId()}}" th:object="${review}">
+<!--/*@thymesVar id="review" type="lipamar.filmoteka.domain.review.Review"*/-->
+<form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getImdbID()}}" th:object="${review}">
     <div>
         <label>Ocena:</label>
         <input type="number" min="1" max="10" th:field="*{rate}">

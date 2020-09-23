@@ -1,6 +1,6 @@
-package lipamar.filmoteka.domain.controller;
+package lipamar.filmoteka.domain.movie;
 
-import lipamar.filmoteka.domain.dto.SearchResultDto;
+import lipamar.filmoteka.domain.movie.dto.SearchResultDto;
 import lipamar.filmoteka.domain.utils.OmdbApiUriBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

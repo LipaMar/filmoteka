@@ -1,23 +1,19 @@
-package lipamar.filmoteka.domain.controller;
+package lipamar.filmoteka.domain.movie;
 
-import lipamar.filmoteka.data.entities.Review;
-import lipamar.filmoteka.data.entities.User;
-import lipamar.filmoteka.domain.dto.MovieDetailsDto;
+import lipamar.filmoteka.domain.review.Review;
+import lipamar.filmoteka.domain.user.User;
+import lipamar.filmoteka.domain.movie.dto.MovieDetailsDto;
 import lipamar.filmoteka.domain.exception.OperationForbidden;
-import lipamar.filmoteka.domain.repository.ReviewRepository;
-import lipamar.filmoteka.domain.repository.UserRepository;
+import lipamar.filmoteka.domain.review.ReviewRepository;
+import lipamar.filmoteka.domain.user.UserRepository;
 import lipamar.filmoteka.domain.utils.OmdbApiUriBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
@@ -29,11 +25,14 @@ import java.util.Set;
 public class MovieInfoController {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
-    private static final Logger logger = LoggerFactory.getLogger(MovieInfoController.class);
 
     public MovieInfoController(ReviewRepository reviewRepository, UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.userRepository = userRepository;
+    }
+    @InitBinder
+    public void setAllowedFields(WebDataBinder dataBinder) {
+        dataBinder.setDisallowedFields("id");
     }
 
     @GetMapping(value = "/{id}")

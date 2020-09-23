@@ -1,6 +1,5 @@
-package lipamar.filmoteka.domain.repository;
+package lipamar.filmoteka.domain.user;
 
-import lipamar.filmoteka.data.entities.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

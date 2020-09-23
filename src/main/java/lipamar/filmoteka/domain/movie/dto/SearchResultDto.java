@@ -1,4 +1,4 @@
-package lipamar.filmoteka.domain.dto;
+package lipamar.filmoteka.domain.movie.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,6 +1,6 @@
-package lipamar.filmoteka.domain.repository;
+package lipamar.filmoteka.domain.review;
 
-import lipamar.filmoteka.data.entities.Review;
+import lipamar.filmoteka.domain.review.Review;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
