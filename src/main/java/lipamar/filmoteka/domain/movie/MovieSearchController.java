@@ -13,13 +13,19 @@ import org.springframework.web.client.RestTemplate;
 @Controller
 @RequestMapping("/find")
 public class MovieSearchController {
+    private static final String LIST_VIEW = "foundMovies";
+
     @GetMapping("/{title:.+}")
-    public String find(@PathVariable String title, @RequestParam(required = false) String year, Model model){
+    public String find(@PathVariable String title, @RequestParam(required = false) String year, Model model) {
+        SearchResultDto result = loadDataFromApi(title, year);
+        model.addAttribute("results", result.getMovies());
+        return LIST_VIEW;
+    }
+
+    private SearchResultDto loadDataFromApi(String title, String year) {
         RestTemplate restTemplate = new RestTemplate();
-        OmdbApiUriBuilder urlBuilder = new OmdbApiUriBuilder();
-        urlBuilder.title(title).year(year);
-        SearchResultDto result = restTemplate.getForObject(urlBuilder.build(),SearchResultDto.class);
-        model.addAttribute("results",result.getMovies());
-        return "foundMovies";
+        OmdbApiUriBuilder uriBuilder = new OmdbApiUriBuilder();
+        uriBuilder.title(title).year(year);
+        return restTemplate.getForObject(uriBuilder.build(), SearchResultDto.class);
     }
 }

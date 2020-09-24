@@ -20,6 +20,7 @@ public class RegisterController {
     private final UserRepository repository;
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(RegisterController.class);
     private String callingPage = "/";
+    private static final String REGISTER_FORM = "register";
 
     @Autowired
     public RegisterController(UserRepository repository) {
@@ -30,21 +31,25 @@ public class RegisterController {
     public String getRegisterForm(Model model, @RequestHeader(required = false) String referer) {
         model.addAttribute("user", new User());
         callingPage = referer == null ? callingPage : referer;
-        return "register";
+        return REGISTER_FORM;
     }
 
     @PostMapping
     public String register(@Valid User user, Errors errors, HttpServletRequest request) {
         if (errors.hasErrors()) {
-            return "register";
+            return REGISTER_FORM;
         }
         repository.save(user);
+        tryToAutoLogin(user, request);
+        log.info("Referer:" + callingPage);
+        return "redirect:" + callingPage;
+    }
+
+    private void tryToAutoLogin(User user, HttpServletRequest request) {
         try {
             request.login(user.getUsername(), user.getPassword());
         } catch (ServletException e) {
             log.error("Auto login failed");
         }
-        log.info("Referer:" + callingPage);
-        return "redirect:" + callingPage;
     }
 }

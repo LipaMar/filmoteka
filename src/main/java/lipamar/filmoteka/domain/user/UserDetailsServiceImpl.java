@@ -1,7 +1,5 @@
 package lipamar.filmoteka.domain.user;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     private final UserRepository userRepository;
 
@@ -28,8 +25,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("USER NOT FOUND");
         }
-
-        log.info("findByUsername() : {}", user.getUsername());
 
         return org.springframework.security.core.userdetails.User.builder().passwordEncoder(encoder::encode)
                 .username(user.getUsername())
