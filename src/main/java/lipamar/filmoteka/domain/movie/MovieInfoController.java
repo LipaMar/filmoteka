@@ -1,8 +1,8 @@
 package lipamar.filmoteka.domain.movie;
 
-import lipamar.filmoteka.domain.review.Review;
-import lipamar.filmoteka.domain.movie.dto.MovieDetailsDto;
 import lipamar.filmoteka.domain.exception.OperationForbidden;
+import lipamar.filmoteka.domain.movie.dto.MovieDetailsDto;
+import lipamar.filmoteka.domain.review.Review;
 import lipamar.filmoteka.domain.review.ReviewRepository;
 import lipamar.filmoteka.domain.user.User;
 import lipamar.filmoteka.domain.user.UserRepository;
@@ -25,12 +25,14 @@ import java.util.Set;
 public class MovieInfoController {
     private final ReviewRepository reviews;
     private final UserRepository users;
+    private final LikeRepository likes;
     private final static String MOVIE_DETAILS_VIEW = "movieDetails";
 
     @Autowired
-    public MovieInfoController(ReviewRepository reviews, UserRepository users) {
+    public MovieInfoController(ReviewRepository reviews, UserRepository users, LikeRepository likes) {
         this.reviews = reviews;
         this.users = users;
+        this.likes = likes;
     }
 
     @ModelAttribute("movie")
@@ -52,9 +54,11 @@ public class MovieInfoController {
 
     @ModelAttribute("review")
     public Review getReview(@PathVariable String movieId) {
-        User user = getLoggedUser();
-
-        Review review = reviews.findByAuthorAndMovieID(user , movieId);
+        Review review = null;
+        try {
+            review = reviews.findByAuthorAndMovieID(getLoggedUser(), movieId);
+        } catch (OperationForbidden ignored) {
+        }
         return review == null ? new Review() : review;
     }
 
@@ -77,6 +81,23 @@ public class MovieInfoController {
         return MOVIE_DETAILS_VIEW;
     }
 
+    @PostMapping(value = "/like")
+    @ResponseBody
+    public boolean likeTheMovie(@PathVariable String movieId) {
+        User user = getLoggedUser();
+        Like like = likes.findByUserAndMovieId(user, movieId);
+        if (like == null) {
+            like = new Like();
+            like.setMovieId(movieId);
+            like.setUser(user);
+            likes.save(like);
+            return true;
+        } else {
+            likes.delete(like);
+            return false;
+        }
+    }
+
     @PostMapping
     public String postReview(@PathVariable String movieId, @Valid Review review, Errors errors) {
         if (!errors.hasErrors()) {
@@ -86,9 +107,7 @@ public class MovieInfoController {
     }
 
     private void saveReview(String id, Review review) {
-        User user = getLoggedUser();
-        if (user == null) throw new OperationForbidden();
-        review.setAuthor(user);
+        review.setAuthor(getLoggedUser());
         review.setMovieID(id);
         review.setDate(new Date());
         reviews.save(review);
@@ -96,8 +115,10 @@ public class MovieInfoController {
 
     private User getLoggedUser() throws OperationForbidden {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        return users.findByUsername(currentPrincipalName);
+        String currentUserName = authentication.getName();
+        User user = users.findByUsername(currentUserName);
+        if (user == null) throw new OperationForbidden();
+        return user;
     }
 
 }

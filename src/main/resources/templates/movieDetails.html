@@ -3,8 +3,11 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <meta charset="UTF-8">
     <title th:text="${movie.getTitle()}"></title>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <div th:object="${movie}">
@@ -18,7 +21,7 @@
     <div>
         <p th:text="*{plot}"></p>
     </div>
-    <div>
+    <div id="rankings">
         <label>
             IMDB rating:
             <span th:text="*{imdbRating}"></span>
@@ -28,9 +31,13 @@
             <span th:text="${#numbers.formatDecimal(avgRating,1,2)}"></span>
         </label>
     </div>
+    <div id="like">
+        <input type="submit" value="Obserwuj" onclick="like()">
+    </div>
 </div>
 <!--/*@thymesVar id="review" type="lipamar.filmoteka.domain.review.Review"*/-->
-<form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getImdbID()}}" th:object="${review}">
+<form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getImdbID()}}"
+      th:object="${review}">
     <div>
         <label>Ocena:</label>
         <input type="number" min="1" max="10" th:field="*{rate}">
@@ -40,7 +47,8 @@
     <input type="submit">
 </form>
 <div sec:authorize="!isAuthenticated()">
-    <p><a th:href="@{/register}">Zarejestruj</a> lub <a th:href="@{/login}">zaloguj</a> się, aby móc dodawać własne recenzje!</p>
+    <p><a th:href="@{/register}">Zarejestruj</a> lub <a th:href="@{/login}">zaloguj</a> się, aby móc dodawać własne
+        recenzje!</p>
 </div>
 <div>
     <ul th:each="comment:${reviews}">
@@ -51,5 +59,27 @@
         </li>
     </ul>
 </div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    function like() {
+        let path = /*[[@{'/movie/'+${movie.getImdbID()}+'/like'}]]*/ '';
+        let xhttp = new XMLHttpRequest();
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        xhttp.onreadystatechange = function (){
+            if(this.readyState===4 && this.status===200){
+                alert(this.response);
+            }
+        }
+        xhttp.open("POST","http://localhost:8080/movie/tt1273235/like",true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.setRequestHeader(header, token);
+        xhttp.send();
+        alert(xhttp.response);
+    }
+
+    /*]]>*/
+</script>
 </body>
 </html>
