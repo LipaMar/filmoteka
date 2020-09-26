@@ -1,5 +1,6 @@
 package lipamar.filmoteka.domain.user;
 
+import lipamar.filmoteka.domain.follow.Follow;
 import lipamar.filmoteka.domain.model.BaseEntity;
 import lipamar.filmoteka.domain.review.Review;
 
@@ -20,6 +21,8 @@ public class User extends BaseEntity {
     private String password;
     @ManyToMany(mappedBy = "userLiked")
     private final Set<Review> likedReviews = new HashSet<>();
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<Follow> followedMovies = new HashSet<>();
 
     public User() {
     }
@@ -38,5 +41,19 @@ public class User extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Review> getLikedReviews() {
+        return likedReviews;
+    }
+
+    public Set<Follow> getFollowedMovies() {
+        return followedMovies;
+    }
+    public void likeReview(Review review){
+        likedReviews.add(review);
+    }
+    public void addFollow(Follow follow){
+        followedMovies.add(follow);
     }
 }
