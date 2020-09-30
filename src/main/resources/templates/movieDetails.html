@@ -11,7 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
 </head>
-<body>
+<body onload="isFollowing()">
 <div th:object="${movie}">
     <div class="poster">
         <img alt="poster could not load" th:src="*{getPoster()}" width="300" height="444">
@@ -35,7 +35,7 @@
     </div>
     <div id="follow">
         <button onclick="follow()" id="follow-btn">
-        <i id="follow-icon" class="far fa-heart"></i>Obserwuj
+            <i id="follow-icon" class="far fa-heart"></i><span id="follow-text">Obserwuj</span>
         </button>
     </div>
 </div>
@@ -68,24 +68,42 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    function follow() {
-        let path = /*[[@{'/movie/'+${movie.getImdbID()}+'/follow'}]]*/ '';
-        let xhttp = new XMLHttpRequest();
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
-        xhttp.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                if(this.response==="true"){
-                    document.getElementById("follow-icon").className = "fas fa-heart";
-                }else if(this.response ==="false"){
-                    document.getElementById("follow-icon").className = "far fa-heart";
-                }
 
+    const path = /*[[@{'/movie/'+${movie.getImdbID()}+'/follow'}]]*/ '';
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+
+    function changeFollowIcon(xhttp) {
+        return function (){
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+                if (xhttp.response === "true") {
+                    document.getElementById("follow-icon").className = "fas fa-heart";
+                    document.getElementById("follow-text").innerText = "Obserwujesz";
+                } else if (xhttp.response === "false") {
+                    document.getElementById("follow-icon").className = "far fa-heart";
+                    document.getElementById("follow-text").innerText = "Obserwuj";
+                }
             }
         }
-        xhttp.open("POST", "http://localhost:8080/movie/tt1273235/follow", true);
+    }
+    function isFollowing(){
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = changeFollowIcon(xhttp);
+        xhttp.open("GET", path, true);
+        setRequiredHeaders(xhttp);
+        xhttp.send();
+    }
+
+    function setRequiredHeaders(xhttp) {
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.setRequestHeader(header, token);
+    }
+
+    function follow() {
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = changeFollowIcon(xhttp);
+        xhttp.open("POST", path, true);
+        setRequiredHeaders(xhttp);
         xhttp.send();
     }
 
