@@ -25,14 +25,12 @@ import java.util.Set;
 public class MovieInfoController {
     private final ReviewRepository reviews;
     private final UserRepository users;
-    private final LikeRepository likes;
     private final static String MOVIE_DETAILS_VIEW = "movieDetails";
 
     @Autowired
-    public MovieInfoController(ReviewRepository reviews, UserRepository users, LikeRepository likes) {
+    public MovieInfoController(ReviewRepository reviews, UserRepository users) {
         this.reviews = reviews;
         this.users = users;
-        this.likes = likes;
     }
 
     @ModelAttribute("movie")
@@ -79,23 +77,6 @@ public class MovieInfoController {
     @GetMapping
     public String movieDetailsPage() {
         return MOVIE_DETAILS_VIEW;
-    }
-
-    @PostMapping(value = "/like")
-    @ResponseBody
-    public boolean likeTheMovie(@PathVariable String movieId) {
-        User user = getLoggedUser();
-        Like like = likes.findByUserAndMovieId(user, movieId);
-        if (like == null) {
-            like = new Like();
-            like.setMovieId(movieId);
-            like.setUser(user);
-            likes.save(like);
-            return true;
-        } else {
-            likes.delete(like);
-            return false;
-        }
     }
 
     @PostMapping

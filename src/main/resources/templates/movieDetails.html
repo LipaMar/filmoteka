@@ -8,8 +8,10 @@
     <title th:text="${movie.getTitle()}"></title>
     <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
     <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
 </head>
-<body>
+<body onload="isFollowing()">
 <div th:object="${movie}">
     <div class="poster">
         <img alt="poster could not load" th:src="*{getPoster()}" width="300" height="444">
@@ -31,52 +33,78 @@
             <span th:text="${#numbers.formatDecimal(avgRating,1,2)}"></span>
         </label>
     </div>
-    <div id="like">
-        <input type="submit" value="Obserwuj" onclick="like()">
+    <div id="follow">
+        <button onclick="follow()" id="follow-btn">
+            <i id="follow-icon" class="far fa-heart"></i><span id="follow-text">Obserwuj</span>
+        </button>
     </div>
 </div>
-<!--/*@thymesVar id="review" type="lipamar.filmoteka.domain.review.Review"*/-->
-<form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getImdbID()}}"
-      th:object="${review}">
-    <div>
-        <label>Ocena:</label>
-        <input type="number" min="1" max="10" th:field="*{rate}">
-    </div>
-    <textarea th:field="*{content}"></textarea>
+<article>
+    <!--/*@thymesVar id="review" type="lipamar.filmoteka.domain.review.Review"*/-->
+    <form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getImdbID()}}"
+          th:object="${review}">
+        <div>
+            <label>Ocena:</label>
+            <input type="number" min="1" max="10" th:field="*{rate}">
+        </div>
+        <textarea th:field="*{content}"></textarea>
 
-    <input type="submit">
-</form>
-<div sec:authorize="!isAuthenticated()">
-    <p><a th:href="@{/register}">Zarejestruj</a> lub <a th:href="@{/login}">zaloguj</a> się, aby móc dodawać własne
-        recenzje!</p>
-</div>
-<div>
-    <ul th:each="comment:${reviews}">
-        <li>
-            <span th:text="'Ocena: '+*{comment.rate}"></span><br>
-            <span th:text="'Data: '+*{#dates.format(comment.date,'dd/MM/yyyy')}"></span><br>
-            <span th:text="*{comment.content}"></span><br>
-        </li>
-    </ul>
-</div>
+        <input type="submit">
+    </form>
+    <div sec:authorize="!isAuthenticated()">
+        <p><a th:href="@{/register}">Zarejestruj</a> lub <a th:href="@{/login}">zaloguj</a> się, aby móc dodawać własne
+            recenzje!</p>
+    </div>
+    <div>
+        <ul th:each="comment:${reviews}">
+            <li>
+                <span th:text="'Ocena: '+*{comment.rate}"></span><br>
+                <span th:text="'Data: '+*{#dates.format(comment.date,'dd/MM/yyyy')}"></span><br>
+                <span th:text="*{comment.content}"></span><br>
+            </li>
+        </ul>
+    </div>
+</article>
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    function like() {
-        let path = /*[[@{'/movie/'+${movie.getImdbID()}+'/like'}]]*/ '';
-        let xhttp = new XMLHttpRequest();
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
-        xhttp.onreadystatechange = function (){
-            if(this.readyState===4 && this.status===200){
-                alert(this.response);
+
+    const path = /*[[@{'/movie/'+${movie.getImdbID()}+'/follow'}]]*/ '';
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+
+    function changeFollowIcon(xhttp) {
+        return function (){
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+                if (xhttp.response === "true") {
+                    document.getElementById("follow-icon").className = "fas fa-heart";
+                    document.getElementById("follow-text").innerText = "Obserwujesz";
+                } else if (xhttp.response === "false") {
+                    document.getElementById("follow-icon").className = "far fa-heart";
+                    document.getElementById("follow-text").innerText = "Obserwuj";
+                }
             }
         }
-        xhttp.open("POST","http://localhost:8080/movie/tt1273235/like",true);
+    }
+    function isFollowing(){
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = changeFollowIcon(xhttp);
+        xhttp.open("GET", path, true);
+        setRequiredHeaders(xhttp);
+        xhttp.send();
+    }
+
+    function setRequiredHeaders(xhttp) {
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.setRequestHeader(header, token);
+    }
+
+    function follow() {
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = changeFollowIcon(xhttp);
+        xhttp.open("POST", path, true);
+        setRequiredHeaders(xhttp);
         xhttp.send();
-        alert(xhttp.response);
     }
 
     /*]]>*/
