@@ -9,6 +9,7 @@ public class OmdbApiUriBuilder {
     private String title = "";
     private String id = "";
     private String year = "";
+    private int page = 1;
     private boolean details = false;
     private OmdbType type = OmdbType.MOVIE;
 
@@ -29,6 +30,7 @@ public class OmdbApiUriBuilder {
         stringBuilder.append(details?"&t="+title:"&s="+title);
         stringBuilder.append(year.isBlank()?"":"&y="+year);
         stringBuilder.append("&type="+type.getOption());
+        stringBuilder.append("&page="+page);
         URI result = null;
         try {
             result = new URI(stringBuilder.toString().replace(" ","%20"));
@@ -62,6 +64,11 @@ public class OmdbApiUriBuilder {
 
     public OmdbApiUriBuilder details(boolean showDetails) {
         details = showDetails;
+        return this;
+    }
+
+    public OmdbApiUriBuilder page(int page) {
+        this.page = page;
         return this;
     }
 }
