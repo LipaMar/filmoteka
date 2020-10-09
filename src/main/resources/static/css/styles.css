@@ -1,9 +1,27 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa');
 
-*{
+* {
     font-family: 'Comfortaa', cursive;
 }
+
 a, a:visited, a:hover, a:active {
     color: inherit;
     text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+.movie {
+    width: 100%;
+    height: 100%;
+    object-fit: cover ;
+}
+.movie-tile{
+    width: 240px;
+    height: 370px;
+}
+.figure-caption{
+    max-width: 270px;
 }

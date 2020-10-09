@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html lang="pl"
       xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Wyszukiwanie</title>
+<head th:replace="fragments/layout.html::head">
 </head>
 <body>
-<ul th:each="movie : ${results}">
-    <li>
-        <div>
-            <img th:src="*{movie.getPoster()}" width="150" height="222"/>
-            <a th:text="*{movie.getTitle()}" th:href="@{'/movie/'+ ${movie.getImdbID()}}"></a>
-            <span th:text="*{movie.getYear()}"></span>
+<nav th:replace="fragments/layout.html::navigation"></nav>
+<article class="container p-4">
+    <th:block th:with="colCount=${4}">
+        <div th:each="r : ${#numbers.sequence(0, results.size(), colCount)}" class="row my-4">
+            <div th:each="c : ${#numbers.sequence(0, colCount - 1)}" class="col-xl-3 col-md-6">
+
+                <div class="d-flex justify-content-center" th:if="${r + c < results.size()}"
+                     th:with="movie = ${results.get(r + c)}">
+                    <a th:href="@{'/movie/'+ ${movie.getImdbID()}}">
+                        <figure class="figure movie-tile">
+                            <img th:src="*{movie.getPoster()}" class="figure-img img-fluid rounded movie"
+                                 alt="Poster should be here">
+                        </figure>
+                        <figcaption class="figure-caption" th:text="*{movie.getTitle() +'('+ movie.getYear()+')'}">
+                        </figcaption>
+                    </a>
+                </div>
+                <div th:unless="${r + c < results.size()}">
+                </div>
+            </div>
         </div>
-    </li>
-</ul>
+    </th:block>
+</article>
 </body>
 </html>
