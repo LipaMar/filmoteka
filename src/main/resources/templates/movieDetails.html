@@ -3,59 +3,67 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <meta charset="UTF-8">
-    <title th:text="${movie.getTitle()}"></title>
     <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
     <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <script th:inline="javascript">
+        const path = /*[[@{'/movie/'+${movie.getImdbID()}+'/follow'}]]*/ '';
+    </script>
+    <div th:replace="fragments/layout.html::head"></div>
+    <script th:src="@{/js/follow.js}" src="../static/js/follow.js"></script>
+    <title th:text="${movie.getTitle()}"></title>
 </head>
-<body onload="isFollowing()">
-<div th:object="${movie}">
-    <div class="poster">
-        <img alt="poster could not load" th:src="*{getPoster()}" width="300" height="444">
-    </div>
-    <span>
-            <span th:text="*{title}"></span>
-            <span th:text="'('+*{getYear()}+')'"></span>
-        </span>
-    <div>
-        <p th:text="*{plot}"></p>
-    </div>
-    <div id="rankings">
-        <label>
-            IMDB rating:
-            <span th:text="*{imdbRating}"></span>
-        </label>
-        <label>
-            Filmoteka rating:
-            <span th:text="${#numbers.formatDecimal(avgRating,1,2)}"></span>
-        </label>
-    </div>
-    <div id="follow">
-        <button onclick="follow()" id="follow-btn">
-            <i id="follow-icon" class="far fa-heart"></i><span id="follow-text">Obserwuj</span>
-        </button>
-    </div>
-</div>
-<article>
-    <!--/*@thymesVar id="review" type="lipamar.filmoteka.domain.review.Review"*/-->
-    <form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getImdbID()}}"
-          th:object="${review}">
-        <div>
-            <label>Ocena:</label>
-            <input type="number" min="1" max="10" th:field="*{rate}">
-        </div>
-        <textarea th:field="*{content}"></textarea>
+<body>
+<nav th:replace="fragments/layout.html::navigation"></nav>
+<div class="container h-100 p-4">
+    <div class="container" th:object="${movie}">
 
-        <input type="submit">
-    </form>
-    <div sec:authorize="!isAuthenticated()">
-        <p><a th:href="@{/register}">Zarejestruj</a> lub <a th:href="@{/login}">zaloguj</a> się, aby móc dodawać własne
-            recenzje!</p>
+        <img class="figure-img img-fluid rounded float-left mr-3" id="poster" alt="poster could not load"
+             th:src="*{getPoster()}">
+
+        <header>
+            <h1 th:text="*{title}"></h1>
+            <h2 th:text="*{getYear()}"></h2>
+        </header>
+        <section>
+            <p th:text="*{plot}"></p>
+        </section>
+        <div id="rankings">
+            <label>
+                IMDB rating:
+                <span th:text="*{imdbRating}"></span>
+            </label>
+            <label>
+                Filmoteka rating:
+                <span th:text="${#numbers.formatDecimal(avgRating,1,2)}"></span>
+            </label>
+        </div>
+        <div class="m-5">
+            <button sec:authorize="isAuthenticated()" class="btn btn-primary" id="follow-btn">
+                <i id="follow-icon" class="far fa-heart"></i><span id="follow-text">Obserwuj</span>
+            </button>
+        </div>
     </div>
-    <div>
+    <fieldset class="form-group" id="reviews">
+        <!--/*@thymesVar id="review" type="lipamar.filmoteka.domain.review.Review"*/-->
+        <form sec:authorize="isAuthenticated()" method="POST" th:action="@{'/movie/'+ ${movie.getImdbID()}}"
+              th:object="${review}">
+            <div>
+                <label for="rate">Ocena:</label>
+                <input class="form-control my-1" style="max-width: 100px;" id="rate" type="number" min="1" max="10"
+                       th:field="*{rate}">
+            </div>
+            <textarea class="form-control my-1" placeholder="Napisz co myślisz o filmie"
+                      th:field="*{content}"></textarea>
+
+            <button class="btn btn-secondary my-1" type="submit">Wyślij</button>
+        </form>
+        <div sec:authorize="!isAuthenticated()">
+            <p><a th:href="@{/register}">Zarejestruj</a> lub <a th:href="@{/login}">zaloguj</a> się, aby móc dodawać
+                własne
+                recenzje!</p>
+        </div>
+    </fieldset>
+    <section>
         <ul th:each="comment:${reviews}">
             <li>
                 <span th:text="'Ocena: '+*{comment.rate}"></span><br>
@@ -63,51 +71,8 @@
                 <span th:text="*{comment.content}"></span><br>
             </li>
         </ul>
-    </div>
-</article>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-
-
-    const path = /*[[@{'/movie/'+${movie.getImdbID()}+'/follow'}]]*/ '';
-    const token = $("meta[name='_csrf']").attr("content");
-    const header = $("meta[name='_csrf_header']").attr("content");
-
-    function changeFollowIcon(xhttp) {
-        return function (){
-            if (xhttp.readyState === 4 && xhttp.status === 200) {
-                if (xhttp.response === "true") {
-                    document.getElementById("follow-icon").className = "fas fa-heart";
-                    document.getElementById("follow-text").innerText = "Obserwujesz";
-                } else if (xhttp.response === "false") {
-                    document.getElementById("follow-icon").className = "far fa-heart";
-                    document.getElementById("follow-text").innerText = "Obserwuj";
-                }
-            }
-        }
-    }
-    function isFollowing(){
-        let xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = changeFollowIcon(xhttp);
-        xhttp.open("GET", path, true);
-        setRequiredHeaders(xhttp);
-        xhttp.send();
-    }
-
-    function setRequiredHeaders(xhttp) {
-        xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.setRequestHeader(header, token);
-    }
-
-    function follow() {
-        let xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = changeFollowIcon(xhttp);
-        xhttp.open("POST", path, true);
-        setRequiredHeaders(xhttp);
-        xhttp.send();
-    }
-
-    /*]]>*/
-</script>
+    </section>
+</div>
+<footer th:replace="fragments/layout.html::footer"></footer>
 </body>
 </html>

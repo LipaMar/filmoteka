@@ -3,6 +3,17 @@
 * {
     font-family: 'Comfortaa', cursive;
 }
+html,body {
+    height: 100%;
+}
+
+
+body{
+    background-color: #acb6bf;
+}
+.container{
+    background-color: #c8d2d2;
+}
 
 a, a:visited, a:hover, a:active {
     color: inherit;
@@ -24,4 +35,13 @@ li {
 }
 .figure-caption{
     max-width: 270px;
+}
+#reviews{
+    clear: both;
+}
+.form-container{
+    max-width: 400px;
+}
+.form-section{
+    margin-top: 42%
 }

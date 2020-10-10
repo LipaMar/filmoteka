@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:insert="fragments/layout.html :: head">
+    <title>Logowanie</title>
+</head>
+<body>
+<nav th:replace="fragments/layout.html :: navigation"></nav>
+<article class="container h-100 d-flex form-container">
+    <div class="container form-section">
+        <form method="post" th:action="@{/login}">
+            <h2>Please sign in</h2>
+            <p>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username"
+                       autofocus="autofocus">
+            </p>
+            <p>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+            </p>
+            <button class="btn btn-lg btn-secondary btn-block" type="submit">Sign in</button>
+        </form>
+    </div>
+</article>
+
+<footer th:replace="fragments/layout.html::footer"></footer>
+</body>
+</html>

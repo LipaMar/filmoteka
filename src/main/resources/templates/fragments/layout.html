@@ -4,7 +4,6 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head">
     <meta charset="UTF-8">
-    <title>Filmoteka</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -16,7 +15,7 @@
     <script th:inline="javascript">
         const findPath = /*[[@{/find/}]]*/'http://localhost:8080/find/';
     </script>
-    <script th:src="@{/js/scripts.js}" src="../../static/js/scripts.js"></script>
+    <script th:src="@{/js/search.js}" src="../../static/js/search.js"></script>
 </head>
 <body>
 <nav th:fragment="navigation" class="navbar navbar-expand-lg bg-dark text-white navbar-dark sticky-top">
@@ -38,7 +37,10 @@
                 <a class="nav-link" th:href="@{/register}">Zarejestruj się</a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" id="logout-link" th:href="@{/logout}">Wyloguj się</a>
+                <a class="nav-link" th:href="@{/following}">Obserwowane</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{/logout}">Wyloguj się</a>
             </li>
         </ul>
         <div class="form-inline ml-auto">
@@ -52,5 +54,8 @@
         </div>
     </div>
 </nav>
+<footer class="fixed-bottom bg-dark text-white" th:fragment="footer">
+    <div class="text-center h5 p-2">Made by <a href="https://github.com/LipaMar/"><i class="fab fa-github"></i>LipaMar</a></div>
+</footer>
 </body>
 </html>
