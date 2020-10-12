@@ -35,6 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .and()
-                .logout();
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/");
     }
 }
