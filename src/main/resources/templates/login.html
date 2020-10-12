@@ -10,17 +10,17 @@
 <article class="container h-100 d-flex form-container">
     <div class="container form-section">
         <form method="post" th:action="@{/login}">
-            <h2>Please sign in</h2>
+            <h2 class="text-center">Zaloguj się</h2>
             <p>
-                <label for="username">Username</label>
+                <label for="username">Nazwa użytkownika</label>
                 <input type="text" id="username" name="username" class="form-control" placeholder="Username"
                        autofocus="autofocus">
             </p>
             <p>
-                <label for="password">Password</label>
+                <label for="password">Hasło</label>
                 <input type="password" id="password" name="password" class="form-control" placeholder="Password">
             </p>
-            <button class="btn btn-lg btn-secondary btn-block" type="submit">Sign in</button>
+            <button class="btn btn-lg btn-secondary btn-block" type="submit">Zaloguj</button>
         </form>
     </div>
 </article>
