@@ -2,31 +2,44 @@
 <html lang="pl"
       xmlns:th="http://www.thymeleaf.org"
 >
-<head>
+<head th:insert="fragments/layout.html::head">
     <meta charset="UTF-8">
     <title>Rejestracja</title>
 </head>
 <body>
-<!--/*@thymesVar id="user" type="lipamar.filmoteka.domain.user.User"*/-->
-<form method="POST" th:action="@{/register}" th:object="${user}">
+<nav th:replace="fragments/layout.html::navigation"></nav>
+<article class="container h-100 d-flex form-container">
+    <div class="container form-section">
+        <form method="POST" th:action="@{/register}" th:object="${user}">
 
-    <div class="errors" th:if="${#fields.hasErrors('*')}">
-        Wprowadzono niepoprawne dane:
-        <ul>
-            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">
-            </li>
-        </ul>
+            <h2 class="text-center">Zarejestruj się</h2>
+            <div class="errors" th:if="${#fields.hasErrors('*')}">
+                Wprowadzono niepoprawne dane:
+                <ul>
+                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}">
+                    </li>
+                </ul>
+            </div>
+
+            <p>
+                <label for="username">Nazwa użytkownika: </label>
+                <input type="text" class="form-control" placeholder="Username" id="username" name="username"
+                       th:field="*{username}"/>
+            </p>
+            <p>
+                <label for="password">Hasło:</label>
+                <input type="password" class="form-control" placeholder="Password" id="password" name="password"
+                       th:field="*{password}"/>
+            </p>
+            <p>
+                <label for="password">Potwierdź hasło:</label>
+                <input type="password" class="form-control" placeholder="Password" id="password_confirm"/>
+            </p>
+            <input class="btn btn-secondary" type="submit" value="Gotowe!">
+        </form>
     </div>
 
-    <label>
-        Nazwa użytkownika:
-        <input type="text" th:field="*{username}"/>
-    </label>
-    <label>
-        Hasło:
-        <input type="password" th:field="*{password}"/>
-    </label>
-    <input type="submit" value="Gotowe!">
-</form>
+</article>
+<footer th:replace="fragments/layout.html::footer"></footer>
 </body>
 </html>
