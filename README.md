@@ -1,9 +1,9 @@
 # Filmoteka
-Filmoteka is an web application based on Java + Spring Boot imitating IMDb["https://www.imdb.com/"] site. It gives user options like: 
-*following favourite movies
-*sharing review with other users
-*rating movies.
-For searching movies application consume OMDbApi[http://www.omdbapi.com/] mainly because IMDb do not share any official api.
+Filmoteka is a web application based on Java + Spring Boot that imitates [IMDb](https://www.imdb.com/) website. It gives the user options like: 
+* follow favourite movies
+* sharing reviews with other users
+* rating movies.
+For searching movies application consume [OMDbApi](http://www.omdbapi.com/) mainly because IMDb do not provide any official api.
 App should be responsive either on web browser running on PC and phone.  
 ## Technologies used to build application
 * Java 14
