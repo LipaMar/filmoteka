@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="pl"
       xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:include="fragments/layout.html::head">
     <meta charset="UTF-8">
     <title>Błąd</title>
 </head>
 <body>
+<nav th:replace="fragments/layout.html::navigation"></nav>
 <h1>
     Brak uprawnień
 </h1>
 <a th:href="@{/}">Powrót do strony głównej</a>
+<footer th:replace="fragments/layout.html::footer"></footer>
 </body>
 </html>
