@@ -3,8 +3,6 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
-    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script th:inline="javascript">
         const path = /*[[@{'/movie/'+${movie.getImdbID()}+'/follow'}]]*/ '';
     </script>
@@ -63,12 +61,14 @@
                 recenzje!</p>
         </div>
     </fieldset>
-    <section>
+    <section class="container">
         <ul th:each="comment:${reviews}">
-            <li>
-                <span th:text="'Ocena: '+*{comment.rate}"></span><br>
-                <span th:text="'Data: '+*{#dates.format(comment.date,'dd/MM/yyyy')}"></span><br>
-                <span th:text="*{comment.content}"></span><br>
+            <li class="bg-light p-2">
+                <p>
+                    <span class="float-left px-2" th:text="'Ocena: '+*{comment.rate}"></span><br>
+                    <span class="float-right px-2" th:text="'Data: '+*{#dates.format(comment.date,'dd/MM/yyyy')}"></span>
+                </p>
+                <p th:text="'Komentarz: '+*{comment.content}"></p>
             </li>
         </ul>
     </section>
